@@ -1,8 +1,14 @@
 package todd
 
-class Pencil {
-    fun write(message: String): WriteResult {
-        return WriteResult((message))
+class Pencil(var durability: Int) {
+
+    fun write(message: String): WriteResult? {
+        val result = WriteResult((message))
+        if (durability > 0) {
+            durability -= message.length;
+            return result
+        }
+        return null
     }
 }
 
