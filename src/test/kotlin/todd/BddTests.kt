@@ -26,7 +26,8 @@ class BddTests {
 
     @Test
     fun `As a pencil manufacturer, I want writing to cause a pencil point to go dull, so that I can sell more pencils`() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        pencil.write("testing...1...2...3...testing")?.on(paper)
+        assert(paper.message).isEqualTo("testing...                   ")
     }
 
 

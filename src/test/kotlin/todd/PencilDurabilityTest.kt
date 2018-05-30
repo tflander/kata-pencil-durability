@@ -1,10 +1,19 @@
 package todd
 
-import org.junit.Test
 import assertk.assert
-import assertk.assertions.*
+import assertk.assertions.isEqualTo
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Test
 
 class PencilDurabilityTest {
+
+    lateinit var paper: Paper
+
+    @Before
+    fun setUp() {
+        paper = Paper()
+    }
 
     /*
 
@@ -16,11 +25,40 @@ class PencilDurabilityTest {
     @Test
     fun `a pencil with 1 durability can write a single lowercase letter`() {
         val pencil = Pencil(1)
-        val paper = Paper()
         pencil.write("a")?.on(paper)
         assert(paper.message).isEqualTo("a")
         assert(pencil.durability).isEqualTo(0)
         pencil.write("b")?.on(paper)
-        assert(paper.message).isEqualTo("a")
+        assert(paper.message).isEqualTo("a ")
+    }
+
+    @Test
+    fun `a pencil will right as many letters of a message as possible before failing`() {
+        val pencil = Pencil(3)
+        pencil.write("testing")?.on(paper)
+        assert(paper.message).isEqualTo("tes    ")
+        assert(pencil.durability).isEqualTo(0)
+    }
+
+    @Test
+    fun `white space does not expend durability`() {
+        val pencil = Pencil(3)
+        pencil.write("a ")?.on(paper)
+        assert(paper.message).isEqualTo("a ")
+        assert(pencil.durability).isEqualTo(2)
+        pencil.write("""b
+c
+        """.trimMargin())?.on(paper)
+        assert(paper.message).isEqualTo("""a b
+c
+        """.trimMargin())
+    }
+
+    @Test
+    fun `Capitol letters expend two durability`() {
+        val pencil = Pencil(10)
+        pencil.write("Test")?.on(paper)
+        assert(paper.message).isEqualTo("Test")
+        assert(pencil.durability).isEqualTo(5)
     }
 }
